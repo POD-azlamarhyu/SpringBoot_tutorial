@@ -1,0 +1,63 @@
+services:
+  db:
+    build: 
+      context: .
+      dockerfile: ./docker/postgre/Dockerfile
+      args:
+        - DB_PORT=${POSTGRE_PORT}
+    container_name: spring_db_container
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - '${POSTGRE_PORT}:${POSTGRE_PORT}'
+    environment:
+      - POSTGRES_DB=${POSTGRE_DB}
+      - POSTGRES_USER=${POSTGRE_USER}
+      - POSTGRES_PASSWORD=${POSTGRE_PW}
+
+  pgadmin4:
+    build: 
+      context: .
+      dockerfile: ./docker/pgadmin/Dockerfile
+      args:
+        - PG_PORT=${PG_PORT}
+    container_name: psql_admin
+    ports:
+      - "${PG_PORT}:80"
+    volumes:
+      - pgadmindata:/var/lib/pgadmin
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - db
+
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/java/Dockerfile
+      args:
+        - API_PORT=${API_PORT}
+        - WORK_DIR=${WORKDIR}
+    container_name: spring_boot_container
+    env_file:
+      - .env
+    tty: true
+    command: ./gradlew clean bootRun
+    volumes:
+      - .:/${WORKDIR}
+    ports:
+      - "${API_PORT}:${API_PORT}"
+      - "${DEBUG_PORT}:${DEBUG_PORT}"
+    depends_on:
+      - db
+    links:
+      - db
+
+volumes:
+  dbdata:
+  pgadmindata:
