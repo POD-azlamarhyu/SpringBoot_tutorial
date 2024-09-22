@@ -38,3 +38,4 @@ out/
 
 *.env
 *application.properties
+*readme_secret.md
