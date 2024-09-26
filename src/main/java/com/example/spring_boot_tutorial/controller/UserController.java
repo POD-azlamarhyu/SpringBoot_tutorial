@@ -1,6 +1,7 @@
 package com.example.spring_boot_tutorial.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,6 @@ public class UserController {
     public ResponseEntity<?> myUser(Authentication authentication){
         UserDTO userDTO = userService.getMyUser(authentication);
 
-        return ResponseEntity.ok(userDTO);
+        return new ResponseEntity<>(userDTO,HttpStatus.OK);
     }
 }

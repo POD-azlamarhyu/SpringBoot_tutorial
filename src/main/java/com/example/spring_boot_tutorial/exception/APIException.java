@@ -3,25 +3,20 @@ package com.example.spring_boot_tutorial.exception;
 import org.springframework.http.HttpStatus;
 
 public class APIException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
     private HttpStatus httpStatus;
-    private String message;
 
-    public APIException(HttpStatus httpStatus, String message){
-        this.httpStatus = httpStatus;
-        this.message = message;
-    }
-    public APIException(String message, HttpStatus httpStatus, String message1) {
+    public APIException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
-        this.message = message1;
     }
 
-    public HttpStatus getHttpStatus(){
+    public HttpStatus getStatusCode(){
         return httpStatus;
     }
 
-    @Override
-    public String getMessage(){
-        return message;
+    public void setStatusCode(HttpStatus httpStatus){
+        this.httpStatus = httpStatus;
     }
 }
+
