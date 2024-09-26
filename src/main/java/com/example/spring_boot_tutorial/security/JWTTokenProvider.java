@@ -75,13 +75,13 @@ public class JWTTokenProvider {
                 .parse(token);
             return true;
         }catch(MalformedJwtException malformedJwtException){
-            throw new APIException(HttpStatus.BAD_REQUEST, "Invalid JWT Token");
+            throw new APIException("Invalid JWT Token",HttpStatus.BAD_REQUEST);
         }catch(ExpiredJwtException expiredJwtException){
-            throw new APIException(HttpStatus.BAD_REQUEST, "Expired JWT Token");
+            throw new APIException("Expired JWT Token",HttpStatus.BAD_REQUEST);
         }catch(UnsupportedJwtException unsupportedJwtException){
-            throw new APIException(HttpStatus.BAD_REQUEST, "Unsupported JWT Token");
+            throw new APIException("Unsupported JWT Token",HttpStatus.BAD_REQUEST);
         }catch(IllegalArgumentException illegalArgumentException){
-            throw new APIException(HttpStatus.BAD_REQUEST, "JWT claims string is null or emtpy");
+            throw new APIException("JWT claims string is null or emtpy",HttpStatus.BAD_REQUEST);
         }
     }
 }
