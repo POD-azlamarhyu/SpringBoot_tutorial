@@ -28,6 +28,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
     }
+
+
+    public ResponseEntity<ErrorDetails> handleUserDoesNotExistsException(UserDoesNotExistsException userDoesNotExistsException,WebRequest webRequest){
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), userDoesNotExistsException.getMessage(),webRequest.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.NOT_FOUND);
+    }
+
+
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
         @SuppressWarnings("null") MethodArgumentNotValidException methodArgumentNotValidException,
