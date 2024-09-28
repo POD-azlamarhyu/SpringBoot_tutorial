@@ -72,39 +72,48 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateLoginId(UUID userId,String loginId){
-        User userRecord = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistsException(userId));
-        userRecord.setLoginId(loginId);
+    public String updateLoginId(UserDetailsImpl userDetailsImpl,String newLoginId){
+        UUID userId = userDetailsImpl.getId();
+        String loginId = userDetailsImpl.getLoginId();
+        User userRecord = userRepository.findByIdAndLoginId(userId, loginId).orElseThrow(() -> new UserDoesNotExistsException(userId));
+        userRecord.setLoginId(newLoginId);
         userRepository.save(userRecord);
         
         return "updated your login id successfully";
     }
 
     @Override
-    public String updateEmail(UUID userId,String email){
-        User uesrRecord = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistsException(userId));
-        uesrRecord.setEmail(email);
-        userRepository.save(uesrRecord);
+    public String updateEmail(UserDetailsImpl userDetailsImpl,String email){
+        UUID userId = userDetailsImpl.getId();
+        String loginId = userDetailsImpl.getLoginId();
+        User userRecord = userRepository.findByIdAndLoginId(userId, loginId).orElseThrow(() -> new UserDoesNotExistsException(userId));
+
+        userRecord.setEmail(email);
+        userRepository.save(userRecord);
 
         return "updated your email successfully";
     }
 
     @Override
-    public String updateUsername(UUID userId,String username){
-        User uesrRecord = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistsException(userId));
+    public String updateUsername(UserDetailsImpl userDetailsImpl,String username){
+        UUID userId = userDetailsImpl.getId();
+        String loginId = userDetailsImpl.getLoginId();
+        User userRecord = userRepository.findByIdAndLoginId(userId, loginId).orElseThrow(() -> new UserDoesNotExistsException(userId));
 
-        uesrRecord.setUsername(username);
-        userRepository.save(uesrRecord);
+        userRecord.setUsername(username);
+        userRepository.save(userRecord);
 
         return "Updated Your name successfully";
     }
 
     @Override
-    public String updatePassword(UUID userId,String password){
-        User uesrRecord = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistsException(userId));
-        uesrRecord.setPassword(passwordEncoder.encode(password));
+    public String updatePassword(UserDetailsImpl userDetailsImpl,String password){
+        UUID userId = userDetailsImpl.getId();
+        String loginId = userDetailsImpl.getLoginId();
+        User userRecord = userRepository.findByIdAndLoginId(userId, loginId).orElseThrow(() -> new UserDoesNotExistsException(userId));
+        userRecord.setPassword(passwordEncoder.encode(password));
 
-        userRepository.save(uesrRecord);
+        userRepository.save(userRecord);
         return "updated password successfully";
     }
 }

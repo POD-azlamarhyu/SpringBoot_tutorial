@@ -10,8 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_boot_tutorial.entity.User;
@@ -38,13 +41,13 @@ public class UserController {
         return new ResponseEntity<>(userDTO,HttpStatus.OK);
     }
 
-    @GetMapping("/username")
+    @GetMapping("/myusername")
     public ResponseEntity<?> getMyUsername(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
         String username = userDetailsImpl.getUsername();
         return new ResponseEntity<>(username,HttpStatus.OK);
     }
 
-    @GetMapping("/email")
+    @GetMapping("/myemail")
     public ResponseEntity<?> getMyEmail(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
         String email = userDetailsImpl.getEmail();
         return new ResponseEntity<>(email,HttpStatus.OK);
@@ -63,4 +66,22 @@ public class UserController {
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/email")
+    public ResponseEntity<?> getUserEmail(@PathVariable("id") UUID id){
+        String email = userServiceImpl.getEmailById(id);
+        return new ResponseEntity<>(email,HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/username")
+    public ResponseEntity<?> getUsername(@PathVariable("id") UUID id){
+        String username = userServiceImpl.getUsernameById(id);
+        return new ResponseEntity<>(username, HttpStatus.OK);
+    }
+
+    @PatchMapping("/loginid")
+    public ResponseEntity<String> updateLoginId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,@RequestBody String loginId){
+        String response = userServiceImpl.updateLoginId(userDetailsImpl, loginId);
+
+        return ResponseEntity.ok().body(response);
+    }
 }

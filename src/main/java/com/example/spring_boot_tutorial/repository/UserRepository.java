@@ -33,4 +33,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(value = DataBaseQuery.queryGetEmailByLoginId,nativeQuery = true)
     String getEmailByLoginId(String loginId);
+
+    Optional<User> findByIdAndLoginId(UUID id,String loginId);
 }

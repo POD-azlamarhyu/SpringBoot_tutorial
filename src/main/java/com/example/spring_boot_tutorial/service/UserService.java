@@ -25,11 +25,11 @@ public interface UserService {
 
     String getEmailById(UUID userId);
     
-    String updateLoginId(UUID userId,String loginId);
+    String updateLoginId(UserDetailsImpl userDetailsImpl,String loginId);
 
-    String updateEmail(UUID userId,String email);
+    String updateEmail(UserDetailsImpl userDetailsImpl,String email);
 
-    String updateUsername(UUID userId,String username);
+    String updateUsername(UserDetailsImpl userDetailsImpl,String username);
 
-    String updatePassword(UUID userId,String password);
+    String updatePassword(UserDetailsImpl userDetailsImpl,String password);
 }
