@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.exception.UserDoesNotExistsException;
@@ -20,6 +21,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
 
     @Override
     public UserDTO getMyUser(Authentication authentication) {
@@ -72,7 +77,34 @@ public class UserServiceImpl implements UserService {
         userRecord.setLoginId(loginId);
         userRepository.save(userRecord);
         
+        return "updated your login id successfully";
+    }
 
-        return "update your login id successfully";
+    @Override
+    public String updateEmail(UUID userId,String email){
+        User uesrRecord = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistsException(userId));
+        uesrRecord.setEmail(email);
+        userRepository.save(uesrRecord);
+
+        return "updated your email successfully";
+    }
+
+    @Override
+    public String updateUsername(UUID userId,String username){
+        User uesrRecord = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistsException(userId));
+
+        uesrRecord.setUsername(username);
+        userRepository.save(uesrRecord);
+
+        return "Updated Your name successfully";
+    }
+
+    @Override
+    public String updatePassword(UUID userId,String password){
+        User uesrRecord = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistsException(userId));
+        uesrRecord.setPassword(passwordEncoder.encode(password));
+
+        userRepository.save(uesrRecord);
+        return "updated password successfully";
     }
 }
