@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.payload.UserDTO;
 import com.example.spring_boot_tutorial.repository.UserRepository;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
-import com.example.spring_boot_tutorial.service.UserService;
 import com.example.spring_boot_tutorial.service.impl.UserServiceImpl;
 
 @RestController
@@ -41,13 +39,13 @@ public class UserController {
         return new ResponseEntity<>(userDTO,HttpStatus.OK);
     }
 
-    @GetMapping("/myusername")
+    @GetMapping("/username")
     public ResponseEntity<?> getMyUsername(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
         String username = userDetailsImpl.getUsername();
         return new ResponseEntity<>(username,HttpStatus.OK);
     }
 
-    @GetMapping("/myemail")
+    @GetMapping("/email")
     public ResponseEntity<?> getMyEmail(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
         String email = userDetailsImpl.getEmail();
         return new ResponseEntity<>(email,HttpStatus.OK);
@@ -83,5 +81,27 @@ public class UserController {
         String response = userServiceImpl.updateLoginId(userDetailsImpl, loginId);
 
         return ResponseEntity.ok().body(response);
+    }
+    
+    @PatchMapping("/email")
+    public ResponseEntity<?> updateEmail(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,@RequestBody String email){
+        String response = userServiceImpl.updateEmail(userDetailsImpl, email);
+
+        return ResponseEntity.ok().body(response);
+    }
+    
+    @PatchMapping("/username")
+    public ResponseEntity<?> updateUsername(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,@RequestBody String username){
+        String response = userServiceImpl.updateUsername(userDetailsImpl, username);
+
+        return ResponseEntity.ok().body(response);
+    }
+    
+    @PatchMapping("/password")
+    public ResponseEntity<?> updatePassword(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+    @RequestBody String password){
+        String respose = userServiceImpl.updatePassword(userDetailsImpl, password);
+
+        return ResponseEntity.ok().body(respose);
     }
 }
