@@ -30,8 +30,10 @@ public class JWTLogoutServiceImpl implements JWTLogoutService {
         return jwtLogoutRepository.existsByTokenAndUserId(token, userId);
     }
 
-    public String createLogoutRecord(UserDetailsImpl userDetailsImpl, String token){
+    @Override
+    public String createLogoutRecordServ(UserDetailsImpl userDetailsImpl, String authToken){
         UUID userId = userDetailsImpl.getId();
+        String token = authToken.substring(7, authToken.length());
         User user = userRepository.findById(userId).orElseThrow(
             () -> new UserDoesNotExistsException(userId)
         );
