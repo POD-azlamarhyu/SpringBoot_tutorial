@@ -33,6 +33,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         
     }
 
+    @SuppressWarnings("null")
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse,FilterChain filterChain) throws ServletException, IOException{
         String token = getTokenFromRequest(httpServletRequest);

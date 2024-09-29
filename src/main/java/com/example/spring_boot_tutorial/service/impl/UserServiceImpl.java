@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.exception.UserDoesNotExistsException;
@@ -17,6 +18,7 @@ import com.example.spring_boot_tutorial.repository.UserRepository;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 import com.example.spring_boot_tutorial.service.UserService;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -115,5 +117,16 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(userRecord);
         return "updated password successfully";
+    }
+
+    @Override
+    public String deleteUser(UserDetailsImpl userDetailsImpl) {
+        UUID userId = userDetailsImpl.getId();
+        User userRecord = userRepository.findById(userId).orElseThrow(
+            () -> new UserDoesNotExistsException(userId)
+        );
+        userRepository.delete(userRecord);
+        
+        return "delete user successfully";
     }
 }

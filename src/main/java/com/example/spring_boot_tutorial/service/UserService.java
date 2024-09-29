@@ -10,6 +10,8 @@ import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.payload.UserDTO;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public interface UserService {
     UserDTO getMyUser(Authentication authentication);
     
@@ -32,4 +34,6 @@ public interface UserService {
     String updateUsername(UserDetailsImpl userDetailsImpl,String username);
 
     String updatePassword(UserDetailsImpl userDetailsImpl,String password);
+
+    String deleteUser(UserDetailsImpl userDetailsImpl);
 }
