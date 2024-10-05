@@ -10,23 +10,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_boot_tutorial.payload.LoginDTO;
 import com.example.spring_boot_tutorial.payload.RegisterDTO;
-import com.example.spring_boot_tutorial.service.AuthService;
+
+import com.example.spring_boot_tutorial.service.impl.AuthServiceImpl;
 import com.example.spring_boot_tutorial.utils.JWTAuthResponse;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private AuthService authService;
+    @Autowired
+    private AuthServiceImpl authServiceImpl;
     
-    public AuthController(AuthService authService){
-        this.authService = authService;
-        
-    }
     
     @PostMapping("/login")
     public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDTO loginDTO){
-        String token = authService.login(loginDTO);
+        String token = authServiceImpl.login(loginDTO);
         JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
         jwtAuthResponse.setAccessToken(token);
         return ResponseEntity.ok(jwtAuthResponse);
@@ -34,7 +32,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO){
-        String response = authService.register(registerDTO);
+        String response = authServiceImpl.register(registerDTO);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 }

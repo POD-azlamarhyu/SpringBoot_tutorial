@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.payload.UserDTO;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 import com.example.spring_boot_tutorial.service.UserService;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Override
