@@ -13,13 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.spring_boot_tutorial.payload.LoginDTO;
 import com.example.spring_boot_tutorial.payload.RegisterDTO;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
-import com.example.spring_boot_tutorial.service.AuthService;
 import com.example.spring_boot_tutorial.service.impl.AuthServiceImpl;
 import com.example.spring_boot_tutorial.service.impl.JWTLogoutServiceImpl;
 import com.example.spring_boot_tutorial.utils.JWTAuthResponse;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/auth")

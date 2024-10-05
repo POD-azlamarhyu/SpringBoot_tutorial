@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.spring_boot_tutorial.exception.APIException;
+import com.example.spring_boot_tutorial.repository.JWTLogoutRepository;
 import com.example.spring_boot_tutorial.service.impl.UserDetailsServiceImpl;
 
 import jakarta.servlet.FilterChain;
@@ -25,20 +26,30 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private JWTTokenProvider jwtTokenProvider;
     private UserDetailsServiceImpl userDetailsServiceImpl;
+    private JWTLogoutRepository jwtLogoutRepository;
 
     
-    public JWTAuthenticationFilter(JWTTokenProvider jwtTokenProvider,UserDetailsServiceImpl userDetailsServiceImpl){
+    public JWTAuthenticationFilter(
+        JWTTokenProvider jwtTokenProvider,
+        UserDetailsServiceImpl userDetailsServiceImpl,
+        JWTLogoutRepository jwtLogoutRepository
+    ){
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsServiceImpl = userDetailsServiceImpl;
+        this.jwtLogoutRepository = jwtLogoutRepository;
         
     }
 
-    @SuppressWarnings("null")
+    
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse,FilterChain filterChain) throws ServletException, IOException{
+    protected void doFilterInternal(
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse,
+        FilterChain filterChain
+    ) throws ServletException, IOException{
         String token = getTokenFromRequest(httpServletRequest);
 
-        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
+        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token) && !jwtLogoutRepository.existsByToken(token)){
             String loginId=jwtTokenProvider.getLoginIdFromToken(token);
             UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(loginId);
 

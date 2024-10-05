@@ -3,6 +3,7 @@ package com.example.spring_boot_tutorial.service.impl;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.entity.JWTLogout;
 import com.example.spring_boot_tutorial.entity.User;
@@ -12,6 +13,7 @@ import com.example.spring_boot_tutorial.repository.UserRepository;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 import com.example.spring_boot_tutorial.service.JWTLogoutService;
 
+@Service
 public class JWTLogoutServiceImpl implements JWTLogoutService {
     
     @Autowired
@@ -21,12 +23,12 @@ public class JWTLogoutServiceImpl implements JWTLogoutService {
     UserRepository userRepository;
 
     @Override
-    public Boolean existsByTokenServ(String token){
+    public boolean existsByTokenServ(String token){
         return jwtLogoutRepository.existsByToken(token);
     }
 
     @Override
-    public Boolean existsByTokenAndUserIdServ(String token , UUID userId){
+    public boolean existsByTokenAndUserIdServ(String token , UUID userId){
         return jwtLogoutRepository.existsByTokenAndUserId(token, userId);
     }
 

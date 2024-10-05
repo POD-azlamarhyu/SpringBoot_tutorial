@@ -59,19 +59,19 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOneUser(@PathVariable("id") UUID id){
+    public ResponseEntity<?> getOneUser(@PathVariable UUID id){
         Optional<User> user = userServiceImpl.getOneUser(id);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @GetMapping("/{id}/email")
-    public ResponseEntity<?> getUserEmail(@PathVariable("id") UUID id){
+    public ResponseEntity<?> getUserEmail(@PathVariable UUID id){
         String email = userServiceImpl.getEmailById(id);
         return new ResponseEntity<>(email,HttpStatus.OK);
     }
 
     @GetMapping("/{id}/username")
-    public ResponseEntity<?> getUsername(@PathVariable("id") UUID id){
+    public ResponseEntity<?> getUsername(@PathVariable UUID id){
         String username = userServiceImpl.getUsernameById(id);
         return new ResponseEntity<>(username, HttpStatus.OK);
     }

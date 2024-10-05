@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.exception.APIException;
+import com.example.spring_boot_tutorial.repository.JWTLogoutRepository;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -31,7 +31,7 @@ public class JWTTokenProvider {
     private Long jwtExpirationDate;
 
     // @Autowired
-    // private Date currentDate;
+    // JWTLogoutRepository jwtLogoutRepository;
 
 
     public String generateJWTToken(Authentication authentication){
@@ -84,4 +84,10 @@ public class JWTTokenProvider {
             throw new APIException("JWT claims string is null or emtpy",HttpStatus.BAD_REQUEST);
         }
     }
+
+    // public boolean existsLogoutToken(String token){
+    //     boolean result = jwtLogoutRepository.existsByToken(token);
+    //     System.out.println(result);
+    //     return result;
+    // }
 }

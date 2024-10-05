@@ -5,9 +5,9 @@ import java.util.UUID;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 
 public interface JWTLogoutService {
-    Boolean existsByTokenServ(String token);
+    boolean existsByTokenServ(String token);
 
-    Boolean existsByTokenAndUserIdServ(String token,UUID userId);
+    boolean existsByTokenAndUserIdServ(String token,UUID userId);
 
     String createLogoutRecordServ(UserDetailsImpl userDetailsImpl, String authToken);
 }
