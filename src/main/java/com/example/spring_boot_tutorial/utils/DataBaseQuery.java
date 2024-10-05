@@ -1,4 +1,4 @@
-package com.example.spring_boot_tutorial.domain;
+package com.example.spring_boot_tutorial.utils;
 
 public class DataBaseQuery {
 

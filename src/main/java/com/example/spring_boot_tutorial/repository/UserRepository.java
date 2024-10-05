@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.example.spring_boot_tutorial.domain.DataBaseQuery;
 import com.example.spring_boot_tutorial.entity.User;
+import com.example.spring_boot_tutorial.utils.DataBaseQuery;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {

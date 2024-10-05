@@ -23,12 +23,10 @@ import com.example.spring_boot_tutorial.security.JWTAuthenticationFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private UserDetailsService userDetailsService;
     private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private JWTAuthenticationFilter jwtAuthenticationFilter;
 
     public SecurityConfig(UserDetailsService userDetailsService,JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,JWTAuthenticationFilter jwtAuthenticationFilter){
-        this.userDetailsService=userDetailsService;
         this.jwtAuthenticationEntryPoint=jwtAuthenticationEntryPoint;
         this.jwtAuthenticationFilter=jwtAuthenticationFilter;
     }
