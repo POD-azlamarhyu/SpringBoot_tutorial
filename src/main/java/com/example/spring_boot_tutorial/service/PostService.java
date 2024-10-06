@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.springframework.security.core.Authentication;
 
 import com.example.spring_boot_tutorial.payload.PostDTO;
-import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 
 public interface PostService {
     PostDTO getByIdServ(Long id);

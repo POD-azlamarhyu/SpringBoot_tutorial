@@ -17,80 +17,77 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.payload.UserDTO;
-import com.example.spring_boot_tutorial.repository.UserRepository;
-import com.example.spring_boot_tutorial.service.impl.UserServiceImpl;
+import com.example.spring_boot_tutorial.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
-    UserServiceImpl userServiceImpl;
+    UserService userService;
     
-    @Autowired
-    UserRepository userRepository;
 
     @GetMapping("/myuser")
     public ResponseEntity<?> myUser(Authentication authentication){
-        UserDTO userDTO = userServiceImpl.getMyUser(authentication);
+        UserDTO userDTO = userService.getMyUser(authentication);
 
         return new ResponseEntity<>(userDTO,HttpStatus.OK);
     }
 
     @GetMapping("/username")
     public ResponseEntity<?> getMyUsername(Authentication authentication){
-        String username = userServiceImpl.getMyUsername(authentication);
+        String username = userService.getMyUsername(authentication);
         return new ResponseEntity<>(username,HttpStatus.OK);
     }
 
     @GetMapping("/email")
     public ResponseEntity<?> getMyEmail(Authentication authentication){
-        String email = userServiceImpl.getMyEmail(authentication);
+        String email = userService.getMyEmail(authentication);
         return new ResponseEntity<>(email,HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllUser(){
-        List<User> userList = userServiceImpl.getAllUser();
+        List<User> userList = userService.getAllUser();
 
         return new ResponseEntity<>(userList,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getOneUser(@PathVariable UUID id){
-        Optional<User> user = userServiceImpl.getOneUser(id);
+        Optional<User> user = userService.getOneUser(id);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @GetMapping("/{id}/email")
     public ResponseEntity<?> getUserEmail(@PathVariable UUID id){
-        String email = userServiceImpl.getEmailById(id);
+        String email = userService.getEmailById(id);
         return new ResponseEntity<>(email,HttpStatus.OK);
     }
 
     @GetMapping("/{id}/username")
     public ResponseEntity<?> getUsername(@PathVariable UUID id){
-        String username = userServiceImpl.getUsernameById(id);
+        String username = userService.getUsernameById(id);
         return new ResponseEntity<>(username, HttpStatus.OK);
     }
 
     @PatchMapping("/loginid")
     public ResponseEntity<String> updateLoginId(Authentication authentication,@RequestBody String loginId){
-        String response = userServiceImpl.updateLoginId(authentication, loginId);
+        String response = userService.updateLoginId(authentication, loginId);
 
         return ResponseEntity.ok().body(response);
     }
     
     @PatchMapping("/email")
     public ResponseEntity<?> updateEmail(Authentication authentication,@RequestBody String email){
-        String response = userServiceImpl.updateEmail(authentication, email);
+        String response = userService.updateEmail(authentication, email);
 
         return ResponseEntity.ok().body(response);
     }
     
     @PatchMapping("/username")
     public ResponseEntity<?> updateUsername(Authentication authentication,@RequestBody String username){
-        String response = userServiceImpl.updateUsername(authentication, username);
+        String response = userService.updateUsername(authentication, username);
 
         return ResponseEntity.ok().body(response);
     }
@@ -98,7 +95,7 @@ public class UserController {
     @PatchMapping("/password")
     public ResponseEntity<?> updatePassword(Authentication authentication,
     @RequestBody String password){
-        String respose = userServiceImpl.updatePassword(authentication, password);
+        String respose = userService.updatePassword(authentication, password);
 
         return ResponseEntity.ok().body(respose);
     }

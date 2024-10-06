@@ -11,9 +11,6 @@ import com.example.spring_boot_tutorial.entity.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
-    Optional<Post> findById(Long id);
 
     List<Post> findByUserId(UUID userId);
-
-    
 }

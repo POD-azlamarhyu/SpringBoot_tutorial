@@ -30,8 +30,8 @@ public class JWTTokenProvider {
     @Value("${spring.app.jwtExpirationMs}")
     private Long jwtExpirationDate;
 
-    // @Autowired
-    // JWTLogoutRepository jwtLogoutRepository;
+    @Autowired
+    JWTLogoutRepository jwtLogoutRepository;
 
 
     public String generateJWTToken(Authentication authentication){
@@ -85,9 +85,9 @@ public class JWTTokenProvider {
         }
     }
 
-    // public boolean existsLogoutToken(String token){
-    //     boolean result = jwtLogoutRepository.existsByToken(token);
-    //     System.out.println(result);
-    //     return result;
-    // }
+    public boolean existsLogoutToken(String token){
+        boolean result = jwtLogoutRepository.existsByToken(token);
+        
+        return result;
+    }
 }

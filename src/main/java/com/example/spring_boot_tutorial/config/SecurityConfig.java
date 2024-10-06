@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,7 +23,10 @@ public class SecurityConfig {
     private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private JWTAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserDetailsService userDetailsService,JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,JWTAuthenticationFilter jwtAuthenticationFilter){
+    public SecurityConfig(
+        JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+        JWTAuthenticationFilter jwtAuthenticationFilter
+    ){
         this.jwtAuthenticationEntryPoint=jwtAuthenticationEntryPoint;
         this.jwtAuthenticationFilter=jwtAuthenticationFilter;
     }
@@ -42,8 +44,10 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests((authorize)->
-                authorize.requestMatchers("/api/auth/login/**","/api/auth/signup/**","/").permitAll()
+            .authorizeHttpRequests(
+                (authorize)->
+                authorize.requestMatchers("/api/auth/signup").permitAll()
+                .requestMatchers("/api/auth/login").permitAll()
                 .anyRequest().authenticated()
             ).exceptionHandling(exception -> exception
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
