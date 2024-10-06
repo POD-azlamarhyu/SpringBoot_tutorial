@@ -47,7 +47,7 @@ public class UserController {
 
     @GetMapping("/email")
     public ResponseEntity<?> getMyEmail(Authentication authentication){
-        String email = authentication.getEmail();
+        String email = userServiceImpl.getMyEmail(authentication);
         return new ResponseEntity<>(email,HttpStatus.OK);
     }
 
