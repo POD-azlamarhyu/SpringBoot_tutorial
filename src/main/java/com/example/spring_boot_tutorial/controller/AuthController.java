@@ -3,7 +3,7 @@ package com.example.spring_boot_tutorial.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_boot_tutorial.payload.LoginDTO;
 import com.example.spring_boot_tutorial.payload.RegisterDTO;
-import com.example.spring_boot_tutorial.security.UserDetailsImpl;
-import com.example.spring_boot_tutorial.service.impl.AuthServiceImpl;
-import com.example.spring_boot_tutorial.service.impl.JWTLogoutServiceImpl;
+import com.example.spring_boot_tutorial.service.AuthService;
+import com.example.spring_boot_tutorial.service.JWTLogoutService;
 import com.example.spring_boot_tutorial.utils.JWTAuthResponse;
 
 
@@ -23,14 +22,14 @@ import com.example.spring_boot_tutorial.utils.JWTAuthResponse;
 public class AuthController {
 
     @Autowired
-    private AuthServiceImpl authServiceImpl;
+    private AuthService authService;
 
     @Autowired
-    private JWTLogoutServiceImpl jwtLogoutServiceImpl;
+    private JWTLogoutService jwtLogoutService;
     
     @PostMapping("/login")
     public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDTO loginDTO){
-        String token = authServiceImpl.login(loginDTO);
+        String token = authService.login(loginDTO);
         JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
         jwtAuthResponse.setAccessToken(token);
         return ResponseEntity.ok(jwtAuthResponse);
@@ -38,16 +37,16 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO){
-        String response = authServiceImpl.register(registerDTO);
+        String response = authService.register(registerDTO);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
-        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+        Authentication authentication,
         @RequestHeader("Authorization") String token
     ){
-        String response = jwtLogoutServiceImpl.createLogoutRecordServ(userDetailsImpl, token);
+        String response = jwtLogoutService.createLogoutRecordServ(authentication, token);
 
         return ResponseEntity.ok().body(response);
     }
