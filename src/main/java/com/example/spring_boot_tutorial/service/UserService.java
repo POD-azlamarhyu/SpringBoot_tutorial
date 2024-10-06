@@ -5,19 +5,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.payload.UserDTO;
-import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 
-import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserService {
     UserDTO getMyUser(Authentication authentication);
     
-    String getMyUsername(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl);
+    String getMyUsername(Authentication authentication);
 
-    String getMyEmail(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl);
+    String getMyEmail(Authentication authentication);
     
     List<User> getAllUser();
     
@@ -27,13 +24,13 @@ public interface UserService {
 
     String getEmailById(UUID userId);
     
-    String updateLoginId(UserDetailsImpl userDetailsImpl,String loginId);
+    String updateLoginId(Authentication authentication,String loginId);
 
-    String updateEmail(UserDetailsImpl userDetailsImpl,String email);
+    String updateEmail(Authentication authentication,String email);
 
-    String updateUsername(UserDetailsImpl userDetailsImpl,String username);
+    String updateUsername(Authentication authentication,String username);
 
-    String updatePassword(UserDetailsImpl userDetailsImpl,String password);
+    String updatePassword(Authentication authentication,String password);
 
-    String deleteUser(UserDetailsImpl userDetailsImpl);
+    String deleteUser(Authentication authentication);
 }

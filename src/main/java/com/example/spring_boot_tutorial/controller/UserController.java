@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.payload.UserDTO;
 import com.example.spring_boot_tutorial.repository.UserRepository;
-import com.example.spring_boot_tutorial.security.UserDetailsImpl;
+import com.example.spring_boot_tutorial.security.authentication;
 import com.example.spring_boot_tutorial.service.impl.UserServiceImpl;
 
 @RestController
@@ -40,14 +40,14 @@ public class UserController {
     }
 
     @GetMapping("/username")
-    public ResponseEntity<?> getMyUsername(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
-        String username = userDetailsImpl.getUsername();
+    public ResponseEntity<?> getMyUsername(Authentication authentication){
+        String username = userServiceImpl.getMyUsername(authentication);
         return new ResponseEntity<>(username,HttpStatus.OK);
     }
 
     @GetMapping("/email")
-    public ResponseEntity<?> getMyEmail(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
-        String email = userDetailsImpl.getEmail();
+    public ResponseEntity<?> getMyEmail(Authentication authentication){
+        String email = authentication.getEmail();
         return new ResponseEntity<>(email,HttpStatus.OK);
     }
 
@@ -77,30 +77,30 @@ public class UserController {
     }
 
     @PatchMapping("/loginid")
-    public ResponseEntity<String> updateLoginId(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,@RequestBody String loginId){
-        String response = userServiceImpl.updateLoginId(userDetailsImpl, loginId);
+    public ResponseEntity<String> updateLoginId(Authentication authentication,@RequestBody String loginId){
+        String response = userServiceImpl.updateLoginId(authentication, loginId);
 
         return ResponseEntity.ok().body(response);
     }
     
     @PatchMapping("/email")
-    public ResponseEntity<?> updateEmail(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,@RequestBody String email){
-        String response = userServiceImpl.updateEmail(userDetailsImpl, email);
+    public ResponseEntity<?> updateEmail(Authentication authentication,@RequestBody String email){
+        String response = userServiceImpl.updateEmail(authentication, email);
 
         return ResponseEntity.ok().body(response);
     }
     
     @PatchMapping("/username")
-    public ResponseEntity<?> updateUsername(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,@RequestBody String username){
-        String response = userServiceImpl.updateUsername(userDetailsImpl, username);
+    public ResponseEntity<?> updateUsername(Authentication authentication,@RequestBody String username){
+        String response = userServiceImpl.updateUsername(authentication, username);
 
         return ResponseEntity.ok().body(response);
     }
     
     @PatchMapping("/password")
-    public ResponseEntity<?> updatePassword(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+    public ResponseEntity<?> updatePassword(Authentication authentication,
     @RequestBody String password){
-        String respose = userServiceImpl.updatePassword(userDetailsImpl, password);
+        String respose = userServiceImpl.updatePassword(authentication, password);
 
         return ResponseEntity.ok().body(respose);
     }

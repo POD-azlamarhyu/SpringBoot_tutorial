@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,12 +51,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getMyEmail(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
+    public String getMyEmail(Authentication authentication){
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         return userDetailsImpl.getEmail();
     }
 
     @Override
-    public String getMyUsername(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
+    public String getMyUsername(Authentication authentication){
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         return userDetailsImpl.getUsername();
     }
 
@@ -74,7 +75,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateLoginId(UserDetailsImpl userDetailsImpl,String newLoginId){
+    public String updateLoginId(Authentication authentication,String newLoginId){
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String loginId = userDetailsImpl.getLoginId();
         User userRecord = userRepository.findByIdAndLoginId(userId, loginId).orElseThrow(() -> new UserDoesNotExistsException(userId));
@@ -85,7 +87,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateEmail(UserDetailsImpl userDetailsImpl,String email){
+    public String updateEmail(Authentication authentication,String email){
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String loginId = userDetailsImpl.getLoginId();
         User userRecord = userRepository.findByIdAndLoginId(userId, loginId).orElseThrow(() -> new UserDoesNotExistsException(userId));
@@ -97,7 +100,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateUsername(UserDetailsImpl userDetailsImpl,String username){
+    public String updateUsername(Authentication authentication,String username){
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String loginId = userDetailsImpl.getLoginId();
         User userRecord = userRepository.findByIdAndLoginId(userId, loginId).orElseThrow(() -> new UserDoesNotExistsException(userId));
@@ -109,7 +113,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updatePassword(UserDetailsImpl userDetailsImpl,String password){
+    public String updatePassword(Authentication authentication,String password){
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String loginId = userDetailsImpl.getLoginId();
         User userRecord = userRepository.findByIdAndLoginId(userId, loginId).orElseThrow(() -> new UserDoesNotExistsException(userId));
@@ -120,7 +125,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String deleteUser(UserDetailsImpl userDetailsImpl) {
+    public String deleteUser(Authentication authentication) {
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         User userRecord = userRepository.findById(userId).orElseThrow(
             () -> new UserDoesNotExistsException(userId)
