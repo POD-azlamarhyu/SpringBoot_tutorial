@@ -3,6 +3,7 @@ package com.example.spring_boot_tutorial.service.impl;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.entity.JWTLogout;
@@ -33,7 +34,8 @@ public class JWTLogoutServiceImpl implements JWTLogoutService {
     }
 
     @Override
-    public String createLogoutRecordServ(UserDetailsImpl userDetailsImpl, String authToken){
+    public String createLogoutRecordServ(Authentication authentication, String authToken){
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String token = authToken.substring(7, authToken.length());
         User user = userRepository.findById(userId).orElseThrow(

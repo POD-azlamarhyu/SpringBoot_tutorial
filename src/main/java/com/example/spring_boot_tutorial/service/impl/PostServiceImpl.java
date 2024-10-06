@@ -5,6 +5,7 @@ import java.util.UUID;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.entity.Post;
@@ -67,8 +68,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public String createPost(UserDetailsImpl userDetailsImpl,PostDTO postDTO) {
-
+    public String createPost(Authentication authentication,PostDTO postDTO) {
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         User user = userRepository.findById(userId)
         .orElseThrow(

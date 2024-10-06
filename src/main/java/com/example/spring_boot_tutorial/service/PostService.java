@@ -1,6 +1,9 @@
 package com.example.spring_boot_tutorial.service;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.security.core.Authentication;
+
 import com.example.spring_boot_tutorial.payload.PostDTO;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 
@@ -11,7 +14,7 @@ public interface PostService {
     
     List<PostDTO> getByUserIdServ(UUID userId);
     
-    String createPost(UserDetailsImpl userDetailsImpl,PostDTO postDTO);
+    String createPost(Authentication authentication,PostDTO postDTO);
 
     String patchPost(Long id,PostDTO postDTO);
 

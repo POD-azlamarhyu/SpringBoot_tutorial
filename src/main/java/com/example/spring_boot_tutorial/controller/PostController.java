@@ -3,6 +3,7 @@ package com.example.spring_boot_tutorial.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,10 +42,10 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPost(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+    public ResponseEntity<?> createPost(Authentication authentication,
     @RequestBody PostDTO postDTO
     ){
-        String response = postServiceImpl.createPost(userDetailsImpl, postDTO);
+        String response = postServiceImpl.createPost(authentication, postDTO);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 

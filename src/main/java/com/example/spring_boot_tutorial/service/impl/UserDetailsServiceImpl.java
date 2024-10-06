@@ -3,7 +3,7 @@ package com.example.spring_boot_tutorial.service.impl;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +18,6 @@ import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    // @Autowired
     private UserRepository userRepository;
 
     public UserDetailsServiceImpl(UserRepository userRepository){

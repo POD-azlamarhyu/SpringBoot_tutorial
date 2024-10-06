@@ -3,6 +3,7 @@ package com.example.spring_boot_tutorial.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,10 +45,10 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
-        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+        Authentication authentication,
         @RequestHeader("Authorization") String token
     ){
-        String response = jwtLogoutServiceImpl.createLogoutRecordServ(userDetailsImpl, token);
+        String response = jwtLogoutServiceImpl.createLogoutRecordServ(authentication, token);
 
         return ResponseEntity.ok().body(response);
     }
