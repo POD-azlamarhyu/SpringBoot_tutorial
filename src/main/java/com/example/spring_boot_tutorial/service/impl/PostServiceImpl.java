@@ -58,8 +58,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getByUserIdServ(UUID userId) {
-        List<Post> posts = postRepository.findByUserId(userId);
+    public List<PostDTO> getByUserIdServ(Authentication authentication) {
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+        UUID userId = userDetailsImpl.getId();
+        User user = userRepository.findById(userId)
+        .orElseThrow(
+            () -> new UserDoesNotExistsException(userId)
+        );
+
+        List<Post> posts = postRepository.findByUser(user);
         List<PostDTO> postDTOs = posts.stream().map(
             post -> alternateToDTO(post)
         ).toList();

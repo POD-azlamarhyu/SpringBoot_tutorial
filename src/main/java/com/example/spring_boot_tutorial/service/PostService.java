@@ -11,7 +11,7 @@ public interface PostService {
 
     List<PostDTO> getAllPostsServ();
     
-    List<PostDTO> getByUserIdServ(UUID userId);
+    List<PostDTO> getByUserIdServ(Authentication authentication);
     
     String createPost(Authentication authentication,PostDTO postDTO);
 
