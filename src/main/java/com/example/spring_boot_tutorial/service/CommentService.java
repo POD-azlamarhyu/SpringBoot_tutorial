@@ -3,21 +3,22 @@ package com.example.spring_boot_tutorial.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.core.Authentication;
+
 import com.example.spring_boot_tutorial.entity.Comment;
 import com.example.spring_boot_tutorial.payload.CommentDTO;
 
 public interface CommentService {
     
+    String createCommentServ(Authentication authentication,Long postId, CommentDTO commentDTO);
 
-    String createCommentServ(CommentDTO commentDTO);
+    List<CommentDTO> findAllCommentServ();
 
-    List<Comment> findAllCommentServ();
+    Comment findByIdServ(Long id);
 
-    List<Comment> findByIdServ(Long id);
+    List<CommentDTO> findByPostIdServ(Long postId);
 
-    List<Comment> findByPostIdServ(Long postId);
-
-    List<Comment> findByUserIdServ(UUID userId);
+    List<CommentDTO> findByUserIdServ(Authentication authentication);
 
     String patchCommentServ(Long id,CommentDTO commentDTO);
 
