@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
+import com.example.spring_boot_tutorial.payload.CommentDTO;
+import com.example.spring_boot_tutorial.service.CommentService;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -36,8 +38,8 @@ public class CommentController {
     public ResponseEntity<?> getCommentsByPostId(
         @PathVariable Long postId
     ){  
-        List<CommentDTO> commentDTOs = commentService.findByPostIdServ();
-        return ResponseEntity.ok().body(commentDTOs).build();
+        List<CommentDTO> commentDTOs = commentService.findByPostIdServ(postId);
+        return ResponseEntity.ok().body(commentDTOs);
     }
 
     @PatchMapping("/{id}")

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.entity.Comment;
 import com.example.spring_boot_tutorial.entity.Post;
@@ -18,6 +19,7 @@ import com.example.spring_boot_tutorial.repository.UserRepository;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 import com.example.spring_boot_tutorial.service.CommentService;
 
+@Service
 public class CommentServiceImpl implements CommentService {
 
     @Autowired
