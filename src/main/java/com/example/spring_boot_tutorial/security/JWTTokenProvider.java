@@ -31,6 +31,12 @@ public class JWTTokenProvider {
     @Value("${spring.app.jwtExpirationMs}")
     private Long jwtExpirationDate;
 
+    @Value("${auth.jwt.refreshSecret}")
+    private String jwtRefreshCode;
+
+    @Value("${auth.jwt.refreshToken.expirationMs}")
+    private Long jwtRefreshExpirationDate;
+
     @Autowired
     JWTLogoutRepository jwtLogoutRepository;
 
@@ -55,7 +61,7 @@ public class JWTTokenProvider {
                 .id(loginUser.getId().toString())
                 .issuedAt(new Date())
                 .expiration(expireDate)
-                .signWith(key())
+                .signWith(key(jwtSecretCode))
                 .claim("username", loginUser.getUsername())
                 .claim("email", loginUser.getEmail())
                 .compact();
@@ -63,8 +69,26 @@ public class JWTTokenProvider {
         return token;
     }
 
-    public Key key(){
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretCode));
+    public String generateJWTRefreshToken(Authentication authentication){
+        UserDetailsImpl loginUser= (UserDetailsImpl) authentication.getPrincipal();
+        String loginId = loginUser.getLoginId();
+        Date currentDate = new Date();
+
+        Date expireDate = new Date(currentDate.getTime() +jwtRefreshExpirationDate);
+
+        String token = Jwts.builder()
+                        .subject(loginId)
+                        .id(loginUser.getId().toString())
+                        .expiration(expireDate)
+                        .signWith(key(jwtRefreshCode))
+                        .claim("username", loginUser.getUsername())
+                        .claim("email", loginUser.getEmail())
+                        .compact();
+        return token;
+    }
+
+    public Key key(String secretCode){
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretCode));
     }
 
     public String getLoginIdFromToken(String token){
