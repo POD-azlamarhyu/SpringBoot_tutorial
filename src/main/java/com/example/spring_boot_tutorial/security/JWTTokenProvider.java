@@ -20,6 +20,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JWTTokenProvider {
@@ -33,6 +34,13 @@ public class JWTTokenProvider {
     @Autowired
     JWTLogoutRepository jwtLogoutRepository;
 
+    public String getJWTFromHeader(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("Authorization");
+        if(token != null && token.startsWith("Bearer ")){
+            return token.substring(7);
+        }
+        return null;
+    }
 
     public String generateJWTToken(Authentication authentication){
         
