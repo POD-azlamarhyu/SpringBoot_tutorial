@@ -44,9 +44,12 @@ public class JWTTokenProvider {
 
         String token = Jwts.builder()
                 .subject(loginId)
+                .id(loginUser.getId().toString())
                 .issuedAt(new Date())
                 .expiration(expireDate)
                 .signWith(key())
+                .claim("username", loginUser.getUsername())
+                .claim("email", loginUser.getEmail())
                 .compact();
 
         return token;
