@@ -61,11 +61,10 @@ public class JWTTokenProvider {
                 .id(loginUser.getId().toString())
                 .issuedAt(new Date())
                 .expiration(expireDate)
-                .signWith(key(jwtSecretCode))
+                .signWith(tokenKey())
                 .claim("username", loginUser.getUsername())
                 .claim("email", loginUser.getEmail())
                 .compact();
-
         return token;
     }
 
@@ -80,20 +79,24 @@ public class JWTTokenProvider {
                         .subject(loginId)
                         .id(loginUser.getId().toString())
                         .expiration(expireDate)
-                        .signWith(key(jwtRefreshCode))
+                        .signWith(refreshKey())
                         .claim("username", loginUser.getUsername())
                         .claim("email", loginUser.getEmail())
                         .compact();
         return token;
     }
 
-    public Key key(String secretCode){
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretCode));
+    public Key tokenKey(){
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretCode));
+    }
+
+    public Key refreshKey(){
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshCode));
     }
 
     public String getLoginIdFromToken(String token){
         String loginId = Jwts.parser()
-                .verifyWith((SecretKey) key())
+                .verifyWith((SecretKey) tokenKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
@@ -105,7 +108,7 @@ public class JWTTokenProvider {
     public boolean validateToken(String token){
         try{
             Jwts.parser()
-                .verifyWith((SecretKey) key())
+                .verifyWith((SecretKey) tokenKey())
                 .build()
                 .parse(token);
             return true;
@@ -122,7 +125,6 @@ public class JWTTokenProvider {
 
     public boolean existsLogoutToken(String token){
         boolean result = jwtLogoutRepository.existsByToken(token);
-        
         return result;
     }
 }
