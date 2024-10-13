@@ -1,6 +1,7 @@
 package com.example.spring_boot_tutorial.security;
 
 import java.security.Key;
+import java.time.Instant;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.example.spring_boot_tutorial.entity.RefreshToken;
 import com.example.spring_boot_tutorial.exception.APIException;
 import com.example.spring_boot_tutorial.repository.JWTLogoutRepository;
 
@@ -20,6 +22,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JWTTokenProvider {
@@ -30,9 +33,22 @@ public class JWTTokenProvider {
     @Value("${spring.app.jwtExpirationMs}")
     private Long jwtExpirationDate;
 
+    @Value("${auth.jwt.refreshSecret}")
+    private String jwtRefreshCode;
+
+    @Value("${auth.jwt.refreshToken.expirationMs}")
+    private Long jwtRefreshExpirationDate;
+
     @Autowired
     JWTLogoutRepository jwtLogoutRepository;
 
+    public String getJWTFromHeader(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("Authorization");
+        if(token != null && token.startsWith("Bearer ")){
+            return token.substring(7);
+        }
+        return null;
+    }
 
     public String generateJWTToken(Authentication authentication){
         
@@ -44,21 +60,45 @@ public class JWTTokenProvider {
 
         String token = Jwts.builder()
                 .subject(loginId)
+                .id(loginUser.getId().toString())
                 .issuedAt(new Date())
                 .expiration(expireDate)
-                .signWith(key())
+                .signWith(tokenKey())
+                .claim("username", loginUser.getUsername())
+                .claim("email", loginUser.getEmail())
                 .compact();
-
         return token;
     }
 
-    public Key key(){
+    public String generateJWTRefreshToken(Authentication authentication){
+        UserDetailsImpl loginUser= (UserDetailsImpl) authentication.getPrincipal();
+        String loginId = loginUser.getLoginId();
+        Date currentDate = new Date();
+
+        Date expireDate = new Date(currentDate.getTime() +jwtRefreshExpirationDate);
+
+        String token = Jwts.builder()
+                        .subject(loginId)
+                        .id(loginUser.getId().toString())
+                        .expiration(expireDate)
+                        .signWith(refreshKey())
+                        .claim("username", loginUser.getUsername())
+                        .claim("email", loginUser.getEmail())
+                        .compact();
+        return token;
+    }
+
+    public Key tokenKey(){
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretCode));
+    }
+
+    public Key refreshKey(){
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshCode));
     }
 
     public String getLoginIdFromToken(String token){
         String loginId = Jwts.parser()
-                .verifyWith((SecretKey) key())
+                .verifyWith((SecretKey) tokenKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
@@ -70,7 +110,7 @@ public class JWTTokenProvider {
     public boolean validateToken(String token){
         try{
             Jwts.parser()
-                .verifyWith((SecretKey) key())
+                .verifyWith((SecretKey) tokenKey())
                 .build()
                 .parse(token);
             return true;
@@ -85,9 +125,16 @@ public class JWTTokenProvider {
         }
     }
 
+    public boolean verifyRefreshToken(RefreshToken refreshToken){
+        if(refreshToken.getExpiryDate().compareTo(Instant.now()) < 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     public boolean existsLogoutToken(String token){
         boolean result = jwtLogoutRepository.existsByToken(token);
-        
         return result;
     }
 }
