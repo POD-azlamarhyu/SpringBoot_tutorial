@@ -1,6 +1,7 @@
 package com.example.spring_boot_tutorial.security;
 
 import java.security.Key;
+import java.time.Instant;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.example.spring_boot_tutorial.entity.RefreshToken;
 import com.example.spring_boot_tutorial.exception.APIException;
 import com.example.spring_boot_tutorial.repository.JWTLogoutRepository;
 
@@ -120,6 +122,14 @@ public class JWTTokenProvider {
             throw new APIException("Unsupported JWT Token",HttpStatus.BAD_REQUEST);
         }catch(IllegalArgumentException illegalArgumentException){
             throw new APIException("JWT claims string is null or emtpy",HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public boolean verifyRefreshToken(RefreshToken refreshToken){
+        if(refreshToken.getExpiryDate().compareTo(Instant.now()) < 0){
+            return false;
+        }else{
+            return true;
         }
     }
 
