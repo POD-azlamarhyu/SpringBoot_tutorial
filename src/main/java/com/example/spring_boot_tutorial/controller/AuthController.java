@@ -64,6 +64,7 @@ public class AuthController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshToken(
         @RequestBody String refreshToken
     ){
