@@ -1,5 +1,6 @@
 package com.example.spring_boot_tutorial.controller;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.example.spring_boot_tutorial.service.AuthService;
 import com.example.spring_boot_tutorial.service.JWTLogoutService;
 import com.example.spring_boot_tutorial.service.RefreshTokenService;
 import com.example.spring_boot_tutorial.utils.JWTAuthResponse;
+import com.example.spring_boot_tutorial.utils.JWTLoginResponse;
 
 
 @RestController
@@ -38,11 +40,12 @@ public class AuthController {
 
     
     @PostMapping("/login")
-    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDTO loginDTO){
-        String token = authService.login(loginDTO);
-        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
-        jwtAuthResponse.setAccessToken(token);
-        return ResponseEntity.ok(jwtAuthResponse);
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO){
+        Map<String, String> tokens = authService.login(loginDTO);
+        JWTLoginResponse jwtLoginResponse = new JWTLoginResponse();
+        jwtLoginResponse.setAccessToken(tokens.get("access_token"));
+        jwtLoginResponse.setRefreshToken(tokens.get("refresh_token"));
+        return ResponseEntity.ok(jwtLoginResponse);
     }
 
     @PostMapping("/signup")

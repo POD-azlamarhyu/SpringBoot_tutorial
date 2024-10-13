@@ -47,8 +47,7 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
-    public RefreshToken createRefreshToken(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public RefreshToken createRefreshToken(Authentication authentication){
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         User user = userRepository.findById(userDetailsImpl.getId()).orElseThrow(
             () -> new UserDoesNotExistsException(userDetailsImpl.getId())

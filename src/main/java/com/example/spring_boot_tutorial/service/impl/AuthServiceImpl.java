@@ -1,7 +1,9 @@
 package com.example.spring_boot_tutorial.service.impl;
 
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,6 +21,7 @@ import com.example.spring_boot_tutorial.entity.Role;
 import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.payload.LoginDTO;
 import com.example.spring_boot_tutorial.payload.RegisterDTO;
+import com.example.spring_boot_tutorial.repository.RefreshTokenRepository;
 import com.example.spring_boot_tutorial.repository.RoleRepository;
 import com.example.spring_boot_tutorial.repository.UserRepository;
 import com.example.spring_boot_tutorial.security.JWTTokenProvider;
@@ -36,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
     private JWTTokenProvider jwtTokenProvider;
 
+
     @Autowired
     private RefreshTokenService refreshTokenService;
 
@@ -52,15 +56,21 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(LoginDTO loginDTO){
+    public Map<String, String> login(LoginDTO loginDTO){
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getLoginIdOrEmail(), loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtTokenProvider.generateJWTToken(authentication);
+        String accessToken = jwtTokenProvider.generateJWTToken(authentication);
+        RefreshToken savedRefreshToken = refreshTokenService.createRefreshToken(authentication);
+        String refreshToken = savedRefreshToken.getToken();
 
-        return token;
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token", accessToken);
+        tokens.put("refresh_token",refreshToken);
+
+        return tokens;
     }
 
     @Override
