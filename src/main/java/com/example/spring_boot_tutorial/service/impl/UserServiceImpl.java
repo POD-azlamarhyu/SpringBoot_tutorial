@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDTO getMyUser(Authentication authentication) {
+    public UserDTO getMyUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
             .map(item -> item.getAuthority())
@@ -51,13 +53,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getMyEmail(Authentication authentication){
+    public String getMyEmail(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         return userDetailsImpl.getEmail();
     }
 
     @Override
-    public String getMyUsername(Authentication authentication){
+    public String getMyUsername(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         return userDetailsImpl.getUsername();
     }
@@ -75,7 +79,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateLoginId(Authentication authentication,String newLoginId){
+    public String updateLoginId(String newLoginId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String loginId = userDetailsImpl.getLoginId();
@@ -87,7 +92,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateEmail(Authentication authentication,String email){
+    public String updateEmail(String email){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String loginId = userDetailsImpl.getLoginId();
@@ -100,7 +106,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateUsername(Authentication authentication,String username){
+    public String updateUsername(String username){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String loginId = userDetailsImpl.getLoginId();
@@ -113,7 +120,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updatePassword(Authentication authentication,String password){
+    public String updatePassword(String password){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         String loginId = userDetailsImpl.getLoginId();
@@ -125,7 +133,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String deleteUser(Authentication authentication) {
+    public String deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         User userRecord = userRepository.findById(userId).orElseThrow(

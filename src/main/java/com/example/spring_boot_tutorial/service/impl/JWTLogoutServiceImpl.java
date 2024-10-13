@@ -4,7 +4,9 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.spring_boot_tutorial.entity.JWTLogout;
 import com.example.spring_boot_tutorial.entity.User;
@@ -34,10 +36,12 @@ public class JWTLogoutServiceImpl implements JWTLogoutService {
     }
 
     @Override
-    public String createLogoutRecordServ(Authentication authentication, String authToken){
+    @Transactional
+    public String createLogoutRecordServ(String accessToken,String refreshToken){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
-        String token = authToken.substring(7, authToken.length());
+        String token = accessToken.substring(7, accessToken.length());
         User user = userRepository.findById(userId).orElseThrow(
             () -> new UserDoesNotExistsException(userId)
         );
@@ -46,6 +50,12 @@ public class JWTLogoutServiceImpl implements JWTLogoutService {
         jwtLogout.setUser(user);
 
         jwtLogoutRepository.save(jwtLogout);
+
+        JWTLogout refreshLogout = new JWTLogout();
+        refreshLogout.setToken(refreshToken);
+        refreshLogout.setUser(user);
+
+        jwtLogoutRepository.save(refreshLogout);
         
         return "Logout successfully.";
     }

@@ -25,11 +25,10 @@ public class CommentController {
 
     @PostMapping("/{postId}")
     public ResponseEntity<?> createComment(
-        Authentication authentication,
         @PathVariable Long postId,
         @RequestBody CommentDTO commentDTO
     ){
-        String response = commentService.createCommentServ(authentication,postId,commentDTO);
+        String response = commentService.createCommentServ(postId,commentDTO);
 
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }

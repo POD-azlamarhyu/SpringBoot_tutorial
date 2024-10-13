@@ -10,11 +10,11 @@ import com.example.spring_boot_tutorial.payload.UserDTO;
 
 
 public interface UserService {
-    UserDTO getMyUser(Authentication authentication);
+    UserDTO getMyUser();
     
-    String getMyUsername(Authentication authentication);
+    String getMyUsername();
 
-    String getMyEmail(Authentication authentication);
+    String getMyEmail();
     
     List<User> getAllUser();
     
@@ -24,13 +24,13 @@ public interface UserService {
 
     String getEmailById(UUID userId);
     
-    String updateLoginId(Authentication authentication,String loginId);
+    String updateLoginId(String loginId);
 
-    String updateEmail(Authentication authentication,String email);
+    String updateEmail(String email);
 
-    String updateUsername(Authentication authentication,String username);
+    String updateUsername(String username);
 
-    String updatePassword(Authentication authentication,String password);
+    String updatePassword(String password);
 
-    String deleteUser(Authentication authentication);
+    String deleteUser();
 }
