@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.entity.Post;
@@ -58,7 +59,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getByUserIdServ(Authentication authentication) {
+    public List<PostDTO> getByUserIdServ() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         User user = userRepository.findById(userId)
@@ -75,7 +77,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public String createPost(Authentication authentication,PostDTO postDTO) {
+    public String createPost(PostDTO postDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         User user = userRepository.findById(userId)

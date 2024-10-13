@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.entity.Comment;
@@ -33,7 +34,8 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public String createCommentServ(Authentication authentication,Long postId, CommentDTO commentDTO) {
+    public String createCommentServ(Long postId, CommentDTO commentDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         User user = userRepository.findById(userId).orElseThrow(
@@ -81,13 +83,12 @@ public class CommentServiceImpl implements CommentService {
         List<CommentDTO> commentDTOs = comments.stream().map(
             comment -> alternateCommentDTO(comment)
         ).toList();
-
         return commentDTOs;
-
     }
 
     @Override
-    public List<CommentDTO> findByUserIdServ(Authentication authentication) {
+    public List<CommentDTO> findByUserIdServ() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
         User user = userRepository.findById(userId).orElseThrow(
@@ -118,7 +119,6 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("Comment", "id", id)
         );
-
         comment.setText(commentDTO.getText());
         commentRepository.save(comment);
 
@@ -128,6 +128,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public String deleteCommentServ(Long id) {
         commentRepository.deleteById(id);
+        
         return "delete comment successfully.";
     }
     
