@@ -56,10 +56,10 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
-        Authentication authentication,
-        @RequestHeader("Authorization") String token
+        @RequestHeader("Authorization") String accessToken,
+        @RequestBody String refreshToken
     ){
-        String response = jwtLogoutService.createLogoutRecordServ(authentication, token);
+        String response = jwtLogoutService.createLogoutRecordServ(accessToken,refreshToken);
 
         return ResponseEntity.ok().body(response);
     }

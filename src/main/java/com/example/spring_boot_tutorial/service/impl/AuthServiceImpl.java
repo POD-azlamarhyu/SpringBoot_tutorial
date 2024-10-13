@@ -98,6 +98,7 @@ public class AuthServiceImpl implements AuthService {
         return "User registered Successfully !!";
     }
 
+    @Override
     public ResponseEntity<?> refreshToken(Optional<RefreshToken> refreshToken){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return refreshToken.map(

@@ -10,5 +10,5 @@ public interface JWTLogoutService {
 
     boolean existsByTokenAndUserIdServ(String token,UUID userId);
 
-    String createLogoutRecordServ(Authentication authentication, String authToken);
+    String createLogoutRecordServ(String accessToken,String refreshToken);
 }
