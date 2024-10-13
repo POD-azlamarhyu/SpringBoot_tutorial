@@ -1,11 +1,13 @@
 package com.example.spring_boot_tutorial.service;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.example.spring_boot_tutorial.entity.RefreshToken;
 import com.example.spring_boot_tutorial.entity.User;
@@ -15,6 +17,7 @@ import com.example.spring_boot_tutorial.repository.UserRepository;
 import com.example.spring_boot_tutorial.security.JWTTokenProvider;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 
+@Service
 public class RefreshTokenService {
 
     @Autowired
@@ -29,18 +32,18 @@ public class RefreshTokenService {
     @Value("${auth.jwt.refreshToken.expirationMs}")
     private Long jwtRefreshExpirationDate;
 
-    public RefreshToken getByToken(String token){
+    public Optional<RefreshToken> getByToken(String token){
         return refreshTokenRepository.findByToken(token);
     }
 
-    public RefreshToken getByTokenAndUser(String token){
+    public Optional<RefreshToken> getByTokenAndUser(String token){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         User user = userRepository.findById(userDetailsImpl.getId()).orElseThrow(
             () -> new UserDoesNotExistsException(userDetailsImpl.getId())
         );
 
-        RefreshToken refreshToken = refreshTokenRepository.findByUserAndToken(user, token);
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserAndToken(user, token);
         return refreshToken;
     }
 
