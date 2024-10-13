@@ -28,21 +28,21 @@ public class UserController {
     
 
     @GetMapping("/myuser")
-    public ResponseEntity<?> myUser(Authentication authentication){
-        UserDTO userDTO = userService.getMyUser(authentication);
+    public ResponseEntity<?> myUser(){
+        UserDTO userDTO = userService.getMyUser();
 
         return new ResponseEntity<>(userDTO,HttpStatus.OK);
     }
 
     @GetMapping("/username")
-    public ResponseEntity<?> getMyUsername(Authentication authentication){
-        String username = userService.getMyUsername(authentication);
+    public ResponseEntity<?> getMyUsername(){
+        String username = userService.getMyUsername();
         return new ResponseEntity<>(username,HttpStatus.OK);
     }
 
     @GetMapping("/email")
-    public ResponseEntity<?> getMyEmail(Authentication authentication){
-        String email = userService.getMyEmail(authentication);
+    public ResponseEntity<?> getMyEmail(){
+        String email = userService.getMyEmail();
         return new ResponseEntity<>(email,HttpStatus.OK);
     }
 
@@ -72,30 +72,29 @@ public class UserController {
     }
 
     @PatchMapping("/loginid")
-    public ResponseEntity<String> updateLoginId(Authentication authentication,@RequestBody String loginId){
-        String response = userService.updateLoginId(authentication, loginId);
+    public ResponseEntity<String> updateLoginId(@RequestBody String loginId){
+        String response = userService.updateLoginId(loginId);
 
         return ResponseEntity.ok().body(response);
     }
     
     @PatchMapping("/email")
-    public ResponseEntity<?> updateEmail(Authentication authentication,@RequestBody String email){
-        String response = userService.updateEmail(authentication, email);
+    public ResponseEntity<?> updateEmail(@RequestBody String email){
+        String response = userService.updateEmail(email);
 
         return ResponseEntity.ok().body(response);
     }
     
     @PatchMapping("/username")
-    public ResponseEntity<?> updateUsername(Authentication authentication,@RequestBody String username){
-        String response = userService.updateUsername(authentication, username);
+    public ResponseEntity<?> updateUsername(@RequestBody String username){
+        String response = userService.updateUsername(username);
 
         return ResponseEntity.ok().body(response);
     }
     
     @PatchMapping("/password")
-    public ResponseEntity<?> updatePassword(Authentication authentication,
-    @RequestBody String password){
-        String respose = userService.updatePassword(authentication, password);
+    public ResponseEntity<?> updatePassword(@RequestBody String password){
+        String respose = userService.updatePassword(password);
 
         return ResponseEntity.ok().body(respose);
     }
