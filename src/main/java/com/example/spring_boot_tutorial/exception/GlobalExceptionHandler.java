@@ -1,10 +1,10 @@
 package com.example.spring_boot_tutorial.exception;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -22,28 +22,80 @@ import com.example.spring_boot_tutorial.value.ErrorDetails;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(APIException.class)
+    @ExceptionHandler({APIException.class})
     public ResponseEntity<ErrorDetails> handleAPIException(APIException apiException,WebRequest webRequest){
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), apiException.getMessage(), webRequest.getDescription(false));
+        ErrorDetails errorDetails = new ErrorDetails(
+            apiException.getStatusCode().value(),
+            apiException.getMessage(),
+            LocalDateTime.now()
+        );
 
-        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails,apiException.getStatusCode());
     }
 
+    @ExceptionHandler({UnAuthorizedException.class})
+    public ResponseEntity<?> handleUnAuthorizedException(
+        UnAuthorizedException unAuthorizedException,
+        WebRequest webRequest
+    ){
+        ErrorDetails errorDetails = new ErrorDetails(
+            HttpStatus.UNAUTHORIZED.value(),
+            unAuthorizedException.getMessage(),
+            LocalDateTime.now()
+        );
 
-    public ResponseEntity<ErrorDetails> handleUserDoesNotExistsException(UserDoesNotExistsException userDoesNotExistsException,WebRequest webRequest){
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), userDoesNotExistsException.getMessage(),webRequest.getDescription(false));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetails> handleGlobalException(
+        Exception ex,
+        WebRequest webRequest
+    ){
+        ErrorDetails errorDetails = new ErrorDetails(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({UserDoesNotExistsException.class})
+    public ResponseEntity<ErrorDetails> handleUserDoesNotExistsException(
+        UserDoesNotExistsException userDoesNotExistsException,WebRequest webRequest
+    ){
+        ErrorDetails errorDetails = new ErrorDetails(
+            HttpStatus.NOT_FOUND.value(),
+            userDoesNotExistsException.getMessage(),
+            LocalDateTime.now()
+        );
 
         return new ResponseEntity<>(errorDetails,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ResourceNotFoundException.class})
+    public ResponseEntity<?> handleResourceNotFoundException(
+        ResourceNotFoundException resourceNotFoundException,
+        WebRequest webRequest
+    ){
+        ErrorDetails errorDetails = new ErrorDetails(
+            HttpStatus.NOT_FOUND.value(), 
+            resourceNotFoundException.getMessage(), 
+            LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
     }
 
 
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-        @SuppressWarnings("null") MethodArgumentNotValidException methodArgumentNotValidException,
-        @SuppressWarnings("null") HttpHeaders httpHeaders,
-        @SuppressWarnings("null") HttpStatusCode httpStatusCode,
-        @SuppressWarnings("null") WebRequest webRequest
+        MethodArgumentNotValidException methodArgumentNotValidException,
+        HttpHeaders httpHeaders,
+        HttpStatusCode httpStatusCode,
+        WebRequest webRequest
     ){
         Map<String, String> errors = new HashMap<>();
         methodArgumentNotValidException.getBindingResult().getAllErrors().forEach((error) ->{
