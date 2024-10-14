@@ -14,6 +14,7 @@ import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.exception.ResourceNotFoundException;
 import com.example.spring_boot_tutorial.exception.UserDoesNotExistsException;
 import com.example.spring_boot_tutorial.payload.PostDTO;
+import com.example.spring_boot_tutorial.payload.PostRequest;
 import com.example.spring_boot_tutorial.repository.PostRepository;
 import com.example.spring_boot_tutorial.repository.UserRepository;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
@@ -77,7 +78,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public String createPost(PostDTO postDTO) {
+    public String createPost(PostRequest postRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetailsImpl.getId();
@@ -87,7 +88,7 @@ public class PostServiceImpl implements PostService {
         );
 
         Post post = new Post();
-        post.setText(postDTO.getText());
+        post.setText(postRequest.getText());
         post.setUser(user);
         postRepository.save(post);
 

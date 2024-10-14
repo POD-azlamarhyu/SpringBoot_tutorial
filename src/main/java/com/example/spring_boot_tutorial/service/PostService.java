@@ -2,6 +2,7 @@ package com.example.spring_boot_tutorial.service;
 import java.util.List;
 
 import com.example.spring_boot_tutorial.payload.PostDTO;
+import com.example.spring_boot_tutorial.payload.PostRequest;
 
 public interface PostService {
     PostDTO getByIdServ(Long id);
@@ -10,7 +11,7 @@ public interface PostService {
     
     List<PostDTO> getByUserIdServ();
     
-    String createPost(PostDTO postDTO);
+    String createPost(PostRequest postRequest);
 
     String patchPost(Long id,PostDTO postDTO);
 
