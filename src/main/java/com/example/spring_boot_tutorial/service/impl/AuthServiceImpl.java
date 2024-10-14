@@ -101,6 +101,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public ResponseEntity<?> refreshToken(Optional<RefreshToken> refreshToken){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         return refreshToken.map(
             refreshTokenService::verifyRefreshTokenExpiration
         ).map(

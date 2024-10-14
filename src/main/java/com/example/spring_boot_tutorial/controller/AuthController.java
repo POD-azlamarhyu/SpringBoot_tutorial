@@ -68,8 +68,8 @@ public class AuthController {
     public ResponseEntity<?> refreshToken(
         @RequestBody String refreshToken
     ){
-        Optional<RefreshToken> refreshTokenRercord = refreshTokenService.getByTokenAndUser(refreshToken);
-        
+        Optional<RefreshToken> refreshTokenRercord = refreshTokenService.isExistsRefreshToken(refreshToken);
+        refreshTokenService.logoutRefreshToken(refreshToken);
         return authService.refreshToken(refreshTokenRercord);
     }
 }

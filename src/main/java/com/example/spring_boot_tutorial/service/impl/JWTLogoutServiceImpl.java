@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.spring_boot_tutorial.entity.JWTLogout;
+import com.example.spring_boot_tutorial.entity.RefreshToken;
 import com.example.spring_boot_tutorial.entity.User;
 import com.example.spring_boot_tutorial.exception.UserDoesNotExistsException;
 import com.example.spring_boot_tutorial.repository.JWTLogoutRepository;
+import com.example.spring_boot_tutorial.repository.RefreshTokenRepository;
 import com.example.spring_boot_tutorial.repository.UserRepository;
 import com.example.spring_boot_tutorial.security.UserDetailsImpl;
 import com.example.spring_boot_tutorial.service.JWTLogoutService;
@@ -24,6 +26,9 @@ public class JWTLogoutServiceImpl implements JWTLogoutService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public boolean existsByTokenServ(String token){
