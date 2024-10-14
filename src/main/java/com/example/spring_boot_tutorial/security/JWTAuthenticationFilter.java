@@ -45,6 +45,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain
     ) throws ServletException, IOException{
         String token = getTokenFromRequest(httpServletRequest);
+        System.out.println("\n処理が走っています．\n");
 
         if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token) && !jwtLogoutRepository.existsByToken(token)){
             String loginId=jwtTokenProvider.getLoginIdFromToken(token);

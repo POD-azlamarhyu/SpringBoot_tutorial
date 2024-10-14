@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_boot_tutorial.payload.PostDTO;
+import com.example.spring_boot_tutorial.payload.PostRequest;
 import com.example.spring_boot_tutorial.service.PostService;
 import java.util.List;
 
@@ -38,8 +39,9 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPost(@RequestBody PostDTO postDTO){
-        String response = postService.createPost(postDTO);
+    public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest){
+        System.out.println("\n処理が走っています．\n");
+        String response = postService.createPost(postRequest);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 

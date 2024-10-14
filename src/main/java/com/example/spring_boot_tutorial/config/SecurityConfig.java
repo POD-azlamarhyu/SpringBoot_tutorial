@@ -55,6 +55,7 @@ public class SecurityConfig {
         http.csrf(
             csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .ignoringRequestMatchers("/api/auth/login")
+            .ignoringRequestMatchers("/api/auth/signup")
         );
         http.cors(
             cors -> cors.configurationSource(corsConfigurationSource())
