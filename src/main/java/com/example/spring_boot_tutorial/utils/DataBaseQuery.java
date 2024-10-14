@@ -12,5 +12,7 @@ public class DataBaseQuery {
 
     public static final String queryGetEmailByLoginId = "select * from user_info as ui where ui.login_id = ?1";
 
-    public static final String queryGetUsernameByLoginId = "select * from user_info as ui where ui.login_id = 1?";
+    public static final String queryGetUsernameByLoginId = "select * from user_info as ui where ui.login_id = ?1";
+
+    public static final String queryFindTokenByUserAndToken = "select * from refreshtoken_info as ri where ri.user_id = 1? and ri.refresh_token = 2? and ri.is_deleted = 3?";
 }

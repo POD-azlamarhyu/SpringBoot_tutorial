@@ -63,6 +63,31 @@ public class RefreshTokenService {
         return createdRefreshToken;
     }
 
+    public Optional<RefreshToken> isExistsRefreshToken(String token){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.findById(userDetailsImpl.getId()).orElseThrow(
+            () -> new UserDoesNotExistsException(userDetailsImpl.getId())
+        );
+
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserAndTokenAndIsDeleted(user, token, false);
+        
+        return refreshToken;
+    }
+
+    public void logoutRefreshToken(String token){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.findById(userDetailsImpl.getId()).orElseThrow(
+            () -> new UserDoesNotExistsException(userDetailsImpl.getId())
+        );
+
+        RefreshToken refreshToken =  refreshTokenRepository.findTokenByUserAndToken(user, token, false);
+        refreshToken.setIsDeleted(true);
+        refreshTokenRepository.save(refreshToken);
+        
+    }
+
     public RefreshToken verifyRefreshTokenExpiration(RefreshToken refreshToken){
         if(refreshToken.getExpiryDate().compareTo(Instant.now()) < 0){
             throw new RuntimeException(refreshToken.getToken() + "\n Refresh token was expired.");

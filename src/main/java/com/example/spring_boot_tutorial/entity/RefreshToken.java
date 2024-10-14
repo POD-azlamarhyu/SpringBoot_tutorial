@@ -3,6 +3,7 @@ package com.example.spring_boot_tutorial.entity;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
@@ -44,4 +45,8 @@ public class RefreshToken {
     @Column(name = "created_time",updatable = false)
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    @ColumnDefault("false")
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 }

@@ -2,7 +2,6 @@ package com.example.spring_boot_tutorial.service;
 
 import java.util.UUID;
 
-import org.springframework.security.core.Authentication;
 
 
 public interface JWTLogoutService {
