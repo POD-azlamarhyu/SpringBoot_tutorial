@@ -40,7 +40,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest){
-        System.out.println("\n処理が走っています．\n");
+        
         String response = postService.createPost(postRequest);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
