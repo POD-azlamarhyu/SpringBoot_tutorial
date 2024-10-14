@@ -1,20 +1,24 @@
 package com.example.spring_boot_tutorial.value;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ErrorDetails {
-    private Date timestamp;
+    private LocalDateTime timestamp;
     private String message;
-    private String details;
+    private Integer httpStatusCode;
 
 
-    public ErrorDetails(Date timestamp, String message, String details) {
-        this.timestamp = timestamp;
+    public ErrorDetails(Integer httpStatusCode, String message , LocalDateTime timestamp) {
+        this.httpStatusCode = httpStatusCode;
         this.message = message;
-        this.details = details;
+        this.timestamp = timestamp;
     }
 
-    public Date getTimestamp() {
+    public Integer getHttpStatusCode(){
+        return httpStatusCode;
+    }
+
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -22,7 +26,4 @@ public class ErrorDetails {
         return message;
     }
 
-    public String getDetails() {
-        return details;
-    }
 }
