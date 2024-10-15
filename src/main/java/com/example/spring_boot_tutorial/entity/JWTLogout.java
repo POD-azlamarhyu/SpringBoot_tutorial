@@ -29,7 +29,7 @@ public class JWTLogout {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "token",nullable = false)
+    @Column(name = "token",unique = true,columnDefinition = "TEXT",length = 512)
     private String token;
     
     @ManyToOne
