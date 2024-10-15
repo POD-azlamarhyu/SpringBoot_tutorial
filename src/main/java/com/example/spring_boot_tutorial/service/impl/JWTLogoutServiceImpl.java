@@ -61,6 +61,10 @@ public class JWTLogoutServiceImpl implements JWTLogoutService {
         refreshLogout.setUser(user);
 
         jwtLogoutRepository.save(refreshLogout);
+
+        RefreshToken refreshTokenLogout = refreshTokenRepository.findTokenByUserAndToken(user, refreshToken, false);
+        refreshTokenLogout.setIsDeleted(true);
+        refreshTokenRepository.save(refreshTokenLogout);
         
         return "Logout successfully.";
     }
