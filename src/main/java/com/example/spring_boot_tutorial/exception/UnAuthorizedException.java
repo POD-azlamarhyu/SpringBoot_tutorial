@@ -12,7 +12,7 @@ public class UnAuthorizedException extends RuntimeException {
     private String apiName;
 
     public UnAuthorizedException(String apiName,String message){
-        super(String.format("%s is not allowed.",apiName));
+        super(String.format("%s \n %s is not allowed.",message,apiName));
         this.message = message;
         this.apiName = apiName;
     }
