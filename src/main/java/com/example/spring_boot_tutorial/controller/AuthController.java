@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_boot_tutorial.entity.RefreshToken;
 import com.example.spring_boot_tutorial.payload.LoginDTO;
+import com.example.spring_boot_tutorial.payload.LogoutDTO;
 import com.example.spring_boot_tutorial.payload.RegisterDTO;
 import com.example.spring_boot_tutorial.security.JWTTokenProvider;
 import com.example.spring_boot_tutorial.service.AuthService;
@@ -57,19 +58,23 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
         @RequestHeader("Authorization") String accessToken,
-        @RequestBody String refreshToken
+        @RequestBody LogoutDTO logoutDTO
     ){
-        String response = jwtLogoutService.createLogoutRecordServ(accessToken,refreshToken);
+        String response = jwtLogoutService.createLogoutRecordServ(accessToken,logoutDTO.getRefreshToken());
 
         return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshToken(
-        @RequestBody String refreshToken
+        @RequestBody LogoutDTO logoutDTO
     ){
-        Optional<RefreshToken> refreshTokenRercord = refreshTokenService.isExistsRefreshToken(refreshToken);
-        refreshTokenService.logoutRefreshToken(refreshToken);
-        return authService.refreshToken(refreshTokenRercord);
+        Optional<RefreshToken> refreshTokenRercord = refreshTokenService.isExistsRefreshToken(logoutDTO.getRefreshToken());
+        if (!refreshTokenRercord.isPresent()){
+            refreshTokenService.logoutRefreshToken(logoutDTO.getRefreshToken());
+            return authService.refreshToken(refreshTokenRercord);
+        }
+        
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UnAuthorization");
     }
 }
