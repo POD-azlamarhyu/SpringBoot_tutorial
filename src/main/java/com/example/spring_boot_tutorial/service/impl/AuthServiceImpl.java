@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Service;
 import com.example.spring_boot_tutorial.entity.RefreshToken;
 import com.example.spring_boot_tutorial.entity.Role;
 import com.example.spring_boot_tutorial.entity.User;
+import com.example.spring_boot_tutorial.exception.APIException;
+import com.example.spring_boot_tutorial.exception.ResourceNotFoundException;
+import com.example.spring_boot_tutorial.exception.UnAuthorizedException;
 import com.example.spring_boot_tutorial.payload.LoginDTO;
 import com.example.spring_boot_tutorial.payload.RegisterDTO;
 import com.example.spring_boot_tutorial.repository.RoleRepository;
@@ -58,28 +62,36 @@ public class AuthServiceImpl implements AuthService {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getLoginIdOrEmail(), loginDTO.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (authentication.isAuthenticated()){
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String accessToken = jwtTokenProvider.generateJWTToken(authentication);
+            RefreshToken savedRefreshToken = refreshTokenService.createRefreshToken(authentication);
+            String refreshToken = savedRefreshToken.getToken();
+    
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("access_token", accessToken);
+            tokens.put("refresh_token",refreshToken);
+            return tokens;
+        }else{
+            throw new UnAuthorizedException("login", "パスワードもしくはログインIDが間違っています．");
+        }
 
-        String accessToken = jwtTokenProvider.generateJWTToken(authentication);
-        RefreshToken savedRefreshToken = refreshTokenService.createRefreshToken(authentication);
-        String refreshToken = savedRefreshToken.getToken();
-
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", accessToken);
-        tokens.put("refresh_token",refreshToken);
-
-        return tokens;
     }
 
     @Override
     public String register(RegisterDTO registerDTO) {
         
         final String normalUser = "Normal";
-
+        System.out.println();
+        System.out.println();
+        System.out.println(registerDTO.getPassword().length());
         if(userRepository.existsByEmail(registerDTO.getEmail())){
-            return "Email is already exists.";
+            throw new APIException("Inputed Email allready exists.", HttpStatus.CONFLICT);
         }
-
+        
+        if(registerDTO.getPassword().length() < 10){
+            throw new ResourceNotFoundException("passwordが短いですよ", "10文字よりも多い文字です．", 1);
+        }
         User user = new User();
         user.setEmail(registerDTO.getEmail());
         user.setLoginId(registerDTO.getEmail());
